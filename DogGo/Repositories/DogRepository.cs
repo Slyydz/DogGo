@@ -150,16 +150,12 @@ namespace DogGo.Repositories
                             SET 
                                 [Name] = @name, 
                                 OwnerId = @ownerId, 
-                                Breed = @breed, 
-                                Notes = @notes, 
-                                ImageUrl = @ImageUrl
+                                Breed = @breed 
                             WHERE Id = @id";
 
                     cmd.Parameters.AddWithValue("@name", dog.Name);
                     cmd.Parameters.AddWithValue("@ownerId", dog.OwnerId);
                     cmd.Parameters.AddWithValue("@breed", dog.Breed);
-                    cmd.Parameters.AddWithValue("@notes", dog.Notes);
-                    cmd.Parameters.AddWithValue("@neighborhoodId", dog.ImageUrl);
                     cmd.Parameters.AddWithValue("@id", dog.Id);
 
                     cmd.ExecuteNonQuery();
