@@ -44,15 +44,17 @@ namespace DogGo.Controllers
         // POST: DogController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
+        public ActionResult Create(Dog dog)
         {
             try
             {
-                return RedirectToAction(nameof(Index));
+                _dogRepo.AddDog(dog);
+
+                return RedirectToAction("Index");
             }
             catch
             {
-                return View();
+                return View(dog);
             }
         }
 
