@@ -67,6 +67,8 @@ namespace DogGo.Repositories
                 {
                     cmd.CommandText = "SELECT * FROM Dog WHERE Id = @id";
 
+                    cmd.Parameters.AddWithValue("@id", id);
+
                     using (SqlDataReader reader = cmd.ExecuteReader())
                     {
                         
