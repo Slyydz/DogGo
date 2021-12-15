@@ -6,6 +6,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using DogGo.Repositories;
 using DogGo.Models;
+using DogGo.Models.ViewModels;
 
 namespace DogGo.Controllers
 {
@@ -13,10 +14,12 @@ namespace DogGo.Controllers
     {
 
         private readonly IWalkerRepository _walkerRepo;
+        private readonly IWalksRepository _walksRepo;
 
-        public WalkersController(IWalkerRepository walkerRepository)
+        public WalkersController(IWalkerRepository walkerRepository, IWalksRepository walksRepo)
         {
             _walkerRepo = walkerRepository;
+            _walksRepo = walksRepo;
         }
 
         // GET: WalkersController
@@ -32,13 +35,31 @@ namespace DogGo.Controllers
         {
             Walker walker = _walkerRepo.GetWalkerById(id);
 
+            List<Walks> walks = _walksRepo.GetWalksByWalker(id);
+
+            int totalWalkTime = 0;
+
+            foreach(Walks walk in walks)
+            {
+                totalWalkTime += walk.Duration;
+            };
+
+
+            WalkerviewModel vm = new WalkerviewModel
+            {
+                Walker = walker,
+                Walks = walks,
+                TotalWalkTime = totalWalkTime
+            };
+
+
             if(walker == null)
             {
                 return NotFound();
             }
             else
             {
-                return View(walker);
+                return View(vm);
             }
 
             
