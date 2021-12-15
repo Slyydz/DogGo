@@ -1,42 +1,63 @@
-﻿@model DogGo.Models.Walker
+﻿@model DogGo.Models.ViewModels.WalkerviewModel;
 
-@{
-    ViewData["Title"] = "Details";
-}
-
-<h1>Details</h1>
-
+@{ ViewData["Title"] = "Details"; }
 <div>
-    <h4>Walker</h4>
-    <hr />
-    <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Id)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Id)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Name)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Name)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Neighborhood)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Neighborhood.Name)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.ImageUrl)
-        </dt>
-        <dd class="col-sm-10">
-            <img class="bg-info" src="@Model.ImageUrl" alt="avatar" />
-        </dd>
-    </dl>
+    <h1 class="mb-4">@Model.Walker.Name</h1>
+
+    <section class="container">
+        <img style="width:100px;float:left;margin-right:20px"
+             src="@Model.Walker.ImageUrl" />
+        <div>
+            <label class="font-weight-bold">Name:</label>
+            <span>@Model.Walker.Name</span>
+        </div>
+        <div>
+            <label class="font-weight-bold">Neighborhood:</label>
+            <span>@Model.Walker.Neighborhood.Name</span>
+        </div>
+    </section>
+
+    <hr class="mt-5" />
+    <div class="clearfix"></div>
+
+    <div class="row">
+        <section class="col-8 container mt-5">
+            <h1 class="text-left">Walks</h1>
+
+            <div class="row">
+                @foreach (Walks walk in Model.Walks)
+                {
+                <div class="card m-4" style="width: 18rem;">
+                    <label class="font-weight-bold">Date:</label>
+                    <span>@walk.Date.ToShortDateString()</span>
+                    <div class="card-body">
+                        <div>
+                            <label class="font-weight-bold">Client:</label>
+                            <span>@walk.Owner.Name</span>
+                        </div>
+                        <div>
+                            <label class="font-weight-bold">Duration:</label>
+                            <span>@TimeSpan.FromSeconds(walk.Duration).Minutes min</span>
+                        </div>
+                    </div>
+                </div>
+                }
+            </div>
+        </section>
+
+        <section class="col-lg-4 col-md-8 container mt-5">
+            <h1>Total Walk Time: </h1>
+            @if (TimeSpan.FromSeconds(Model.TotalWalkTime).Hours >= 1)
+            {
+                <span class=" font-weight-bold">@TimeSpan.FromSeconds(Model.TotalWalkTime).Hours hr</span>
+            }
+            <span class="font-weight-bold">@TimeSpan.FromSeconds(Model.TotalWalkTime).Minutes min</span>
+
+
+        </section>
+    </div>
 </div>
 <div>
-    <a href="/walkers/edit/@Model.Id">Edit</a> |
+     
     <a asp-action="Index">Back to List</a>
 </div>
