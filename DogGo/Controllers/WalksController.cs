@@ -25,9 +25,23 @@ namespace DogGo.Controllers
         // GET: WalksController
         public ActionResult Index()
         {
-            List<Walks> walks = _walksRepo.GetWalks();
+            WalksViewModel vm = new WalksViewModel
+            {
+                Walks = _walksRepo.GetWalks(),
+                CheckedWalks = new List<int>()
+            };
 
-            return View(walks);
+            return View(vm);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+
+        public ActionResult DeleteChecked(WalksViewModel vm)
+        {
+            _walksRepo.DeleteWalks(vm.CheckedWalks);
+
+            return RedirectToAction("Index");
         }
 
         // GET: WalksController/Details/5

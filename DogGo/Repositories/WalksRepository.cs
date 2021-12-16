@@ -149,5 +149,35 @@ namespace DogGo.Repositories
             }
         }
 
+        public void DeleteWalks(List<int> walks)
+        {
+            using(SqlConnection conn = Connection)
+            {
+                conn.Open();
+
+                using(SqlCommand cmd = conn.CreateCommand())
+                {
+                    List<string> paramNames = walks.Select((m, i) => $"@p{i}").ToList();
+                    //This acheives the same result as what is commented below
+
+                        /*new List<string>();*/
+
+                    //for(int i = 0; i < walks.Count; i++)
+                    //{
+                    //    paramNames.Add($"@p{i}");
+                    //}
+
+                    cmd.CommandText = $"DELETE FROM Walks WHERE Id in ({String.Join(", ", paramNames)})";
+
+                    for(int i = 0; i < walks.Count; i++)
+                    {
+                        cmd.Parameters.AddWithValue(paramNames[i], walks[i]);
+                    }
+
+                    cmd.ExecuteNonQuery();
+                }
+            }
+        }
+
     }
 }
