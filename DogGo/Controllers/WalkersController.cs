@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using DogGo.Repositories;
 using DogGo.Models;
 using DogGo.Models.ViewModels;
+using System.Security.Claims;
 
 namespace DogGo.Controllers
 {
@@ -15,19 +16,36 @@ namespace DogGo.Controllers
 
         private readonly IWalkerRepository _walkerRepo;
         private readonly IWalksRepository _walksRepo;
+        private readonly IOwnerRepository _ownerRepo;
 
-        public WalkersController(IWalkerRepository walkerRepository, IWalksRepository walksRepo)
+
+        public WalkersController(IWalkerRepository walkerRepository, IWalksRepository walksRepo, IOwnerRepository ownerRepo)
         {
             _walkerRepo = walkerRepository;
             _walksRepo = walksRepo;
+            _ownerRepo = ownerRepo;
         }
 
         // GET: WalkersController
         public ActionResult Index()
         {
-            List<Walker> walkers = _walkerRepo.GetAllWalkers();
 
-            return View(walkers);
+            int ownerId = GetCurrentUserId();
+
+            if(ownerId != 0)
+            {
+                Owner owner = _ownerRepo.GetOwnerById(ownerId);
+
+                List<Walker> walkers = _walkerRepo.WalkersByNeighborhood(owner.NeighborhoodId);
+
+                return View(walkers);
+            }
+            else
+            {
+                List<Walker> walkers = _walkerRepo.GetAllWalkers();
+
+                return View(walkers);
+            }
         }
 
         // GET: WalkersController/Details/5
@@ -126,6 +144,20 @@ namespace DogGo.Controllers
             {
                 return View();
             }
+        }
+
+        private int GetCurrentUserId()
+        {
+            try
+            {
+                string id = User.FindFirstValue(ClaimTypes.NameIdentifier);
+                return int.Parse(id);
+            }
+            catch
+            {
+                return 0;
+            }
+            
         }
     }
 }
