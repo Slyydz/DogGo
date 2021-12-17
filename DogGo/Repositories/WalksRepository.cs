@@ -88,7 +88,7 @@ namespace DogGo.Repositories
 
                         using (SqlCommand cmd = conn.CreateCommand())
                         {
-                            cmd.CommandText = "SELECT *, Dog.Id DogId, Dog.Name DogName, Dog.OwnerId, Owner.Name OwnerName FROM Walks JOIN Dog on Dog.Id = Walks.DogId JOIN Owner on Dog.OwnerId = Owner.Id ORDER BY Owner.Name";
+                            cmd.CommandText = "SELECT *, Dog.Id DogId, Dog.Name DogName, Dog.OwnerId, Owner.Name OwnerName FROM Walks JOIN Dog on Dog.Id = Walks.DogId JOIN Owner on Dog.OwnerId = Owner.Id ORDER BY Walks.Date";
 
                             
 
